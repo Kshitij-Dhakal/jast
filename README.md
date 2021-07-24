@@ -1,4 +1,4 @@
-# Just Another SQL Template(JAST)
+# Just Another SQL Template (JAST)
 
 JAST is a lightweight sql template library for java that is inspired
 by [Spring Data R2DBC](https://spring.io/projects/spring-data-r2dbc). It uses [jOOλ](https://github.com/jOOQ/jOOL) throw checked exception.
