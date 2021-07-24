@@ -18,7 +18,7 @@ import java.util.function.Function;
  *
  * @param <T>
  */
-public class MappedRowImpl<T> implements MappedRow<T> {
+class MappedRowImpl<T> implements MappedRow<T> {
     private final String sql;
     private final RowMapper<T> rowMapper;
     private final DataSource dataSource;

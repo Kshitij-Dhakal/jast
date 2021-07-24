@@ -61,6 +61,7 @@ Full code can be found inside dhaka.jast.example package.
    class PersonRepo extends SqlRepo {
       Optional<Person> findPersonById(String id) {
          return sql("SELECT * FROM person WHERE id=?")
+                 .bind(1, id)
                  .withConverter(new PersonRowMapper())
                  .findFirst();
       }

@@ -5,7 +5,7 @@ import org.jooq.lambda.Unchecked;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class RowImpl implements Row {
+class RowImpl implements Row {
     private final ResultSet resultSet;
 
     public RowImpl(ResultSet resultSet) {
