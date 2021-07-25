@@ -1,7 +1,7 @@
 package dhaka.jast;
 
 public interface SQL {
-    int executeUpdate();
+    Result<Integer> executeUpdate();
 
     SQL bind(int i, String value);
 
