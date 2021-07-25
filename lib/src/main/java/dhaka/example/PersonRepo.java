@@ -23,14 +23,14 @@ class PersonRepo extends SqlRepo {
                 .executeUpdate()
                 .orElseThrow(failed(errMsg));
         if (i == 1) {
-            return findPersonById(person.getId())
+            return findById(person.getId())
                     .orElseThrow();
         } else {
             throw new FailedException(errMsg);
         }
     }
 
-    Optional<Person> findPersonById(String id) throws FailedException {
+    Optional<Person> findById(String id) throws FailedException {
         return sql("SELECT * FROM person WHERE id=?")
                 .bind(1, id)
                 .withConverter(new PersonRowMapper())
@@ -38,7 +38,7 @@ class PersonRepo extends SqlRepo {
                 .orElseThrow(failed("Failed to get person by id."));
     }
 
-    List<Person> findAllPerson() throws FailedException {
+    List<Person> findAll() throws FailedException {
         return sql("SELECT * FROM person")
                 .withConverter(new PersonRowMapper())
                 .findAll()

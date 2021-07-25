@@ -32,7 +32,7 @@ Full code can be found inside `dhaka.example` package.
             .executeUpdate()
             .orElseThrow(failed(errMsg));
          if (i == 1) {
-            return findPersonById(person.getId())
+            return findById(person.getId())
                 .orElseThrow();
          } else {
             throw new FailedException(errMsg);
