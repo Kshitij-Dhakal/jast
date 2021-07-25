@@ -1,5 +1,6 @@
-package dhaka.example;
+package dhaka.example.person;
 
+import dhaka.example.FailedException;
 import dhaka.jast.SqlRepo;
 
 import javax.sql.DataSource;

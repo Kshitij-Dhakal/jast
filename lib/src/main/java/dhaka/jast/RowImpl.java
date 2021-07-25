@@ -18,8 +18,18 @@ class RowImpl implements Row {
     }
 
     @Override
+    public String getString(int columnLabel) {
+        return unchecked(resultSet, rs -> rs.getString(1));
+    }
+
+    @Override
     public Long getLong(String columnLabel) {
         return unchecked(resultSet, rs -> rs.getLong(columnLabel));
+    }
+
+    @Override
+    public Long getLong(int columnIndex) {
+        return unchecked(resultSet, rs -> rs.getLong(columnIndex));
     }
 
     @Override
@@ -28,8 +38,18 @@ class RowImpl implements Row {
     }
 
     @Override
+    public Integer getInt(int columnIndex) {
+        return unchecked(resultSet, rs -> rs.getInt(columnIndex));
+    }
+
+    @Override
     public Boolean getBoolean(String columnLabel) {
         return unchecked(resultSet, rs -> rs.getBoolean(columnLabel));
+    }
+
+    @Override
+    public Boolean getBoolean(int columnIndex) {
+        return unchecked(resultSet, rs -> rs.getBoolean(columnIndex));
     }
 
     private interface InternalRowMapper<T> {

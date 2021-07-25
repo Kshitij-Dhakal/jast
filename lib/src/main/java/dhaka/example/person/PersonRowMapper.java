@@ -1,4 +1,4 @@
-package dhaka.example;
+package dhaka.example.person;
 
 import dhaka.jast.Row;
 import dhaka.jast.RowMapper;
