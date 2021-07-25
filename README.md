@@ -6,7 +6,7 @@ checked exception.
 
 ## Getting Started
 
-Full code can be found inside dhaka.jast.example package.
+Full code can be found inside `dhaka.example` package.
 
 1. Creating SQLRepo
 
@@ -62,7 +62,7 @@ Full code can be found inside dhaka.jast.example package.
 
    ```java
    class PersonRepo extends SqlRepo {
-      Optional<Person> findPersonById(String id) throws FailedException {
+      Optional<Person> findById(String id) throws FailedException {
          return sql("SELECT * FROM person WHERE id=?")
             .bind(1, id)
             .withConverter(new PersonRowMapper())
@@ -70,7 +70,7 @@ Full code can be found inside dhaka.jast.example package.
             .orElseThrow(failed("Failed to get person by id."));
       }
       
-      List<Person> findAllPerson() throws FailedException {
+      List<Person> findAll() throws FailedException {
          return sql("SELECT * FROM person")
             .withConverter(new PersonRowMapper())
             .findAll()
@@ -79,7 +79,7 @@ Full code can be found inside dhaka.jast.example package.
       
       private Function<Throwable, FailedException> failed(String errMsg) {
            return throwable -> new FailedException(errMsg, throwable);
-       }
+      }
    }
    ```
 
