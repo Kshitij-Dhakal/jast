@@ -1,6 +1,6 @@
 package dhaka.example;
 
-class FailedException extends RuntimeException {
+class FailedException extends Exception {
     FailedException(String message) {
         super(message);
     }

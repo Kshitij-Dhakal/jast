@@ -15,8 +15,6 @@ import java.util.function.Function;
 
 /**
  * This class is where all the jdbc code will be implemented
- *
- * @param <T>
  */
 class MappedRowImpl<T> implements MappedRow<T> {
     private final String sql;
@@ -34,7 +32,7 @@ class MappedRowImpl<T> implements MappedRow<T> {
 
 
     @Override
-    public List<T> findAll() {
+    public Result<List<T>> findAll() {
         return getU(resultSet -> {
             List<T> mappedRows = Lists.newArrayList();
             while (next(resultSet)) {
@@ -54,7 +52,7 @@ class MappedRowImpl<T> implements MappedRow<T> {
     }
 
     @Override
-    public Optional<T> findFirst() {
+    public Result<Optional<T>> findFirst() {
         return getU(rs -> {
             T map = null;
             if (next(rs)) {
@@ -68,16 +66,13 @@ class MappedRowImpl<T> implements MappedRow<T> {
         return Unchecked.supplier(rs::next).get().equals(Boolean.TRUE);
     }
 
-    private <U> U getU(Function<ResultSet, U> function) {
+    private <U> Result<U> getU(Function<ResultSet, U> function) {
         try (var con = dataSource.getConnection();
              var pst = con.prepareStatement(sql);
              var rs = getResultSet(pst)) {
-            return function.apply(rs);
+            return Result.of(function.apply(rs));
         } catch (SQLException exception) {
-            Unchecked.throwChecked(exception);
-
-            //method will not reach following statement
-            return null;
+            return Result.error(exception);
         }
     }
 }

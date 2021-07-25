@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MappedRow<T> {
-    List<T> findAll();
+    Result<List<T>> findAll();
 
-    Optional<T> findFirst();
+    Result<Optional<T>> findFirst();
 }

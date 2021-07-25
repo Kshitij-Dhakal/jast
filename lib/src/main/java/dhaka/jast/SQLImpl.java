@@ -5,6 +5,7 @@ import org.jooq.lambda.Unchecked;
 
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.function.Consumer;
@@ -20,18 +21,15 @@ class SQLImpl implements SQL {
     }
 
     @Override
-    public int executeUpdate() {
+    public Result<Integer> executeUpdate() {
         try (var con = dataSource.getConnection();
              var pst = con.prepareStatement(sql)) {
             for (var pstConsumer : consumers) {
                 pstConsumer.accept(pst);
             }
-            return pst.executeUpdate();
+            return Result.of(pst.executeUpdate());
         } catch (SQLException exception) {
-            Unchecked.throwChecked(exception);
-
-            //method will not reach following statement
-            return 0;
+            return Result.error(exception);
         }
     }
 
