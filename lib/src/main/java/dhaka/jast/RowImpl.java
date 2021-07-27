@@ -1,9 +1,9 @@
 package dhaka.jast;
 
-import org.jooq.lambda.Unchecked;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import static dhaka.jast.Unchecked.throwChecked;
 
 class RowImpl implements Row {
     private final ResultSet resultSet;
@@ -60,7 +60,7 @@ class RowImpl implements Row {
         try {
             return internalRowMapper.unchecked(rs);
         } catch (SQLException e) {
-            Unchecked.throwChecked(e);
+            throwChecked(e);
 
             //method will not reach below
             return null;

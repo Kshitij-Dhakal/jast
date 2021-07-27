@@ -21,7 +21,7 @@ public class BlogRepo extends SqlRepo {
         //get total count
         var count = sql("SELECT COUNT(DISTINCT b.id) FROM blog b")
                 .withConverter(row -> row.getLong(1))
-                .findFirst().orElseThrow().orElseThrow();
+                .findFirst().rethrowError();
 
         if (count == 0) {
             return PageResponse.empty();
@@ -34,7 +34,7 @@ public class BlogRepo extends SqlRepo {
                 .bind(1, request.getOffset())
                 .bind(2, request.getLimit())
                 .withConverter(row -> row.getString("b.id"))
-                .findAll().orElseThrow();
+                .findAll().rethrowError();
         if (idList.isEmpty()) {
             return PageResponse.empty();
         }
@@ -44,10 +44,10 @@ public class BlogRepo extends SqlRepo {
                 "FROM blog b LEFT JOIN publisher p ON p.id=b.publisher LEFT JOIN comment c ON c.blog=b.id " +
                 "WHERE b.id IN (?" + ", ?".repeat(idList.size() - 1) + ") ORDER BY b.created " + sort);
         for (int i = 0; i < idList.size(); i++) {
-            sql.bind(i + 1, idList.size());
+            sql.bind(i + 1, idList.get(i));
         }
         var all = sql.withConverter(this::toBlog)
-                .findAll().orElseThrow().stream()
+                .findAll().rethrowError().stream()
                 //group blogs by id
                 .collect(Collectors.groupingBy(Blog::getId, LinkedHashMap::new, Collectors.toList()))
                 //collect comments with common blog id

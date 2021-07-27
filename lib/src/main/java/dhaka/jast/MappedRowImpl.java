@@ -9,7 +9,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -32,7 +31,7 @@ class MappedRowImpl<T> implements MappedRow<T> {
 
 
     @Override
-    public Result<List<T>> findAll() {
+    public ListResult<T> findAll() {
         return getU(resultSet -> {
             List<T> mappedRows = Lists.newArrayList();
             while (next(resultSet)) {
@@ -40,8 +39,8 @@ class MappedRowImpl<T> implements MappedRow<T> {
                 var map = rowMapper.map(row);
                 mappedRows.add(map);
             }
-            return mappedRows;
-        });
+            return ListResult.of(mappedRows);
+        }, ListResult::error);
     }
 
     private ResultSet getResultSet(PreparedStatement pst) throws SQLException {
@@ -52,27 +51,27 @@ class MappedRowImpl<T> implements MappedRow<T> {
     }
 
     @Override
-    public Result<Optional<T>> findFirst() {
+    public OptionalResult<T> findFirst() {
         return getU(rs -> {
             T map = null;
             if (next(rs)) {
                 map = rowMapper.map(new RowImpl(rs));
             }
-            return Optional.ofNullable(map);
-        });
+            return OptionalResult.of(map);
+        }, OptionalResult::error);
     }
 
     private boolean next(ResultSet rs) {
         return Unchecked.supplier(rs::next).get().equals(Boolean.TRUE);
     }
 
-    private <U> Result<U> getU(Function<ResultSet, U> function) {
+    private <U> U getU(Function<ResultSet, U> function, Function<Throwable, U> errorFunction) {
         try (var con = dataSource.getConnection();
              var pst = con.prepareStatement(sql);
              var rs = getResultSet(pst)) {
-            return Result.of(function.apply(rs));
+            return function.apply(rs);
         } catch (SQLException exception) {
-            return Result.error(exception);
+            return errorFunction.apply(exception);
         }
     }
 }
