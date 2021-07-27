@@ -18,25 +18,16 @@ class UpdateResultImpl<T> implements UpdateResult<T> {
 
     @Override
     public T exceptionally(Function<Throwable, T> fn) {
-        if (throwable != null) {
-            return fn.apply(throwable);
-        }
-        return value;
+        return ResultHelper.exceptionally(fn, throwable, this::get);
     }
 
     @Override
     public T rethrowError() {
-        if (throwable != null) {
-            Unchecked.throwChecked(throwable);
-        }
-        return value;
+        return ResultHelper.rethrowError(throwable, this::get);
     }
 
     @Override
-    public <E extends Throwable> T catchError(Function<Throwable, E> fn) throws E {
-        if (throwable != null) {
-            throw fn.apply(throwable);
-        }
-        return get();
+    public <E extends Throwable> T catchAndRethrow(Function<Throwable, E> fn) throws E {
+        return ResultHelper.catchAndRethrow(fn, throwable, this::get);
     }
 }

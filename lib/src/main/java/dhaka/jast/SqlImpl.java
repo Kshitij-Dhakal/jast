@@ -9,6 +9,9 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.function.Consumer;
 
+import static dhaka.jast.JastCommons.consume;
+import static dhaka.jast.JastCommons.throwChecked;
+
 class SqlImpl implements Sql {
     private final String sql;
     private final DataSource dataSource;
@@ -47,22 +50,22 @@ class SqlImpl implements Sql {
 
     @Override
     public Sql bind(int i, String value) {
-        return bind(Unchecked.consume(pst -> pst.setString(i, value)));
+        return bind(consume(pst -> pst.setString(i, value)));
     }
 
     @Override
     public Sql bind(int i, Long value) {
-        return bind(Unchecked.consume(pst -> pst.setLong(i, value)));
+        return bind(consume(pst -> pst.setLong(i, value)));
     }
 
     @Override
     public Sql bind(int i, Integer value) {
-        return bind(Unchecked.consume(pst -> pst.setInt(i, value)));
+        return bind(consume(pst -> pst.setInt(i, value)));
     }
 
     @Override
     public Sql bind(int i, Boolean value) {
-        return bind(Unchecked.consume(pst -> pst.setBoolean(i, value)));
+        return bind(consume(pst -> pst.setBoolean(i, value)));
     }
 
     @Override
@@ -75,7 +78,8 @@ class SqlImpl implements Sql {
             connection.setAutoCommit(false);
             ThreadTransactionMap.put(connection);
         } catch (SQLException throwable) {
-            Unchecked.throwChecked(throwable);
+            //noinspection ResultOfMethodCallIgnored
+            throwChecked(throwable);
         }
     }
 
@@ -86,7 +90,8 @@ class SqlImpl implements Sql {
                 connection.commit();
             }
         } catch (SQLException throwable) {
-            Unchecked.throwChecked(throwable);
+            //noinspection ResultOfMethodCallIgnored
+            throwChecked(throwable);
         }
     }
 
@@ -97,7 +102,8 @@ class SqlImpl implements Sql {
                 connection.rollback();
             }
         } catch (SQLException throwable) {
-            Unchecked.throwChecked(throwable);
+            //noinspection ResultOfMethodCallIgnored
+            throwChecked(throwable);
         }
     }
 

@@ -21,7 +21,7 @@ public class BlogRepo extends SqlRepo {
         //get total count
         var count = sql("SELECT COUNT(DISTINCT b.id) FROM blog b")
                 .withConverter(row -> row.getLong(1))
-                .findFirst().rethrowError();
+                .findFirst().rethrowError().orElse(0L);
 
         if (count == 0) {
             return PageResponse.empty();

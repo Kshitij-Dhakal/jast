@@ -1,11 +1,7 @@
 package dhaka.jast;
 
-import java.util.NoSuchElementException;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
-
-import static dhaka.jast.Unchecked.throwChecked;
 
 class OptionalResultImpl<T> implements OptionalResult<T> {
     private final T value;
@@ -27,31 +23,17 @@ class OptionalResultImpl<T> implements OptionalResult<T> {
     }
 
     @Override
-    public <E extends Throwable> Optional<T> catchError(Function<Throwable, E> fn) throws E {
-        Objects.requireNonNull(fn);
-        if (this.throwable != null) {
-            throw fn.apply(this.throwable);
-        }
-        if (value == null) {
-            throw fn.apply(new NoSuchElementException());
-        }
-        return optionally();
+    public <E extends Throwable> Optional<T> catchAndRethrow(Function<Throwable, E> fn) throws E {
+        return ResultHelper.catchAndRethrow(fn, throwable, this::optionally);
     }
 
     @Override
     public Optional<T> exceptionally(Function<Throwable, T> fn) {
-        if (throwable != null) {
-            return Optional.ofNullable(fn.apply(throwable));
-        } else {
-            return Optional.ofNullable(value);
-        }
+        return ResultHelper.exceptionally(e -> Optional.ofNullable(fn.apply(e)), throwable, this::optionally);
     }
 
     @Override
     public Optional<T> rethrowError() {
-        if (throwable != null) {
-            throwChecked(throwable);
-        }
-        return Optional.ofNullable(value);
+        return ResultHelper.rethrowError(throwable, this::optionally);
     }
 }
