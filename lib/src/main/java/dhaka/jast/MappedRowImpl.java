@@ -21,8 +21,8 @@ class MappedRowImpl<T> implements MappedRow<T> {
     private final DataSource dataSource;
     private final List<Consumer<PreparedStatement>> consumers;
 
-    public MappedRowImpl(String sql, RowMapper<T> rowMapper, DataSource dataSource,
-                         @Nonnull List<Consumer<PreparedStatement>> consumers) {
+    MappedRowImpl(String sql, RowMapper<T> rowMapper, DataSource dataSource,
+                  @Nonnull List<Consumer<PreparedStatement>> consumers) {
         this.sql = sql;
         this.rowMapper = rowMapper;
         this.dataSource = dataSource;

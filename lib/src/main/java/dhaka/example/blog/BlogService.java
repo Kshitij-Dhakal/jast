@@ -7,7 +7,7 @@ import java.util.Optional;
 class BlogService {
     private final BlogRepo blogRepo;
 
-    public BlogService(BlogRepo blogRepo) {
+    BlogService(BlogRepo blogRepo) {
         this.blogRepo = blogRepo;
     }
 

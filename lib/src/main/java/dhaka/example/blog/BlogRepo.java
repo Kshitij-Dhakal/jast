@@ -12,8 +12,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class BlogRepo extends SqlRepo {
-    public BlogRepo(DataSource dataSource) {
+class BlogRepo extends SqlRepo {
+    BlogRepo(DataSource dataSource) {
         super(dataSource);
     }
 
@@ -104,17 +104,18 @@ public class BlogRepo extends SqlRepo {
                 .setContent(row.getString("b.content"))
                 .setCreated(row.getLong("b.created"));
 
-        var publisherBuilder = Publisher.newBuilder();
-        publisherBuilder.setId(row.getString("p.id"))
-                .setName(row.getString("p.name"));
-        blogBuilder.setPublisher(publisherBuilder.build());
+        var publisher = Publisher.newBuilder()
+                .setId(row.getString("p.id"))
+                .setName(row.getString("p.name"))
+                .build();
+        blogBuilder.setPublisher(publisher);
 
         var commentId = row.getString("c.id");
         if (commentId != null) {
-            var commentBuilder = Comment.newBuilder();
-            commentBuilder.setId(commentId)
-                    .setContent(row.getString("c.content"));
-            blogBuilder.setComments(List.of(commentBuilder.build()));
+            var comment = Comment.newBuilder().setId(commentId)
+                    .setContent(row.getString("c.content"))
+                    .build();
+            blogBuilder.setComments(List.of(comment));
         }
         return blogBuilder.build();
     }

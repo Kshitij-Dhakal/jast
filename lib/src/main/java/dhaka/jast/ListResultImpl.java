@@ -5,11 +5,11 @@ import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.function.Function;
 
-public class ListResultImpl<T> implements ListResult<T> {
+class ListResultImpl<T> implements ListResult<T> {
     private final List<T> list;
     private final Throwable throwable;
 
-    public ListResultImpl(List<T> list, Throwable throwable) {
+    ListResultImpl(List<T> list, Throwable throwable) {
         this.list = list;
         this.throwable = throwable;
     }

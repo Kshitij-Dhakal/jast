@@ -21,8 +21,7 @@ class PersonRepo extends SqlRepo {
                 .bind(4, person.getCreated())
                 .bind(5, person.getDeleted())
                 .executeUpdate()
-                .catchAndRethrow(failed(errMsg))
-                .orElseThrow();
+                .catchAndRethrow(failed(errMsg));
         if (i == 1) {
             return findById(person.getId())
                     .orElseThrow();

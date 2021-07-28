@@ -11,7 +11,7 @@ final class ResultHelper {
         //no instance
     }
 
-    static <T, U> U exceptionally(Function<Throwable, U> fn, Throwable throwable, Supplier<U> supplier) {
+    static <U> U exceptionally(Function<Throwable, U> fn, Throwable throwable, Supplier<U> supplier) {
         Objects.requireNonNull(fn);
         if (throwable != null) {
             return fn.apply(throwable);
@@ -20,7 +20,7 @@ final class ResultHelper {
         }
     }
 
-    static <T, U> U rethrowError(Throwable throwable, Supplier<U> supplier) {
+    static <U> U rethrowError(Throwable throwable, Supplier<U> supplier) {
         if (throwable != null) {
             //doesn't returns anything
             //throws checked exception
@@ -29,8 +29,8 @@ final class ResultHelper {
         return supplier.get();
     }
 
-    static <T, U, E extends Throwable> U catchAndRethrow(Function<Throwable, E> fn, Throwable throwable,
-                                                         Supplier<U> supplier) throws E {
+    static <U, E extends Throwable> U catchAndRethrow(Function<Throwable, E> fn, Throwable throwable,
+                                                      Supplier<U> supplier) throws E {
         Objects.requireNonNull(fn);
         if (throwable != null) {
             throw fn.apply(throwable);
