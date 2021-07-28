@@ -1,6 +1,9 @@
 package dhaka.jast;
 
 import javax.sql.DataSource;
+import java.util.Objects;
+
+import static dhaka.jast.JastCommons.throwChecked;
 
 public class SqlRepo {
     private final DataSource dataSource;
@@ -9,11 +12,21 @@ public class SqlRepo {
         this.dataSource = dataSource;
     }
 
-    public SQL sql(String sql) {
-        return new SQLImpl(sql, dataSource);
+    protected Sql sql(String sql) {
+        Objects.requireNonNull(sql);
+        return new SqlImpl(sql, dataSource);
     }
 
-    public static SQL sql(DataSource dataSource, String sql) {
-        return new SQLImpl(sql, dataSource);
+    public <U, E extends Throwable> U transactional(TransactionBlock<U, E> fn) {
+        Objects.requireNonNull(fn);
+        try (var conn = dataSource.getConnection()) {
+            conn.setAutoCommit(false);
+            ThreadConnectionMap.put(conn);
+            return fn.begin(new TransactionImpl(conn));
+        } catch (Throwable throwable) {
+            return throwChecked(throwable);
+        } finally {
+            ThreadConnectionMap.remove();
+        }
     }
 }

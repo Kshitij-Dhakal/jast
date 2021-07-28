@@ -1,9 +1,9 @@
 package dhaka.jast;
 
-import org.jooq.lambda.Unchecked;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import static dhaka.jast.JastCommons.throwChecked;
 
 class RowImpl implements Row {
     private final ResultSet resultSet;
@@ -18,18 +18,58 @@ class RowImpl implements Row {
     }
 
     @Override
-    public Long getLong(String columnLabel) {
+    public String getString(int columnLabel) {
+        return unchecked(resultSet, rs -> rs.getString(1));
+    }
+
+    @Override
+    public long getLong(String columnLabel) {
         return unchecked(resultSet, rs -> rs.getLong(columnLabel));
     }
 
     @Override
-    public Integer getInt(String columnLabel) {
+    public long getLong(int columnIndex) {
+        return unchecked(resultSet, rs -> rs.getLong(columnIndex));
+    }
+
+    @Override
+    public int getInt(String columnLabel) {
         return unchecked(resultSet, rs -> rs.getInt(columnLabel));
     }
 
     @Override
-    public Boolean getBoolean(String columnLabel) {
+    public int getInt(int columnIndex) {
+        return unchecked(resultSet, rs -> rs.getInt(columnIndex));
+    }
+
+    @Override
+    public boolean getBoolean(String columnLabel) {
         return unchecked(resultSet, rs -> rs.getBoolean(columnLabel));
+    }
+
+    @Override
+    public boolean getBoolean(int columnIndex) {
+        return unchecked(resultSet, rs -> rs.getBoolean(columnIndex));
+    }
+
+    @Override
+    public byte getByte(String columnLabel) {
+        return unchecked(resultSet, rs -> rs.getByte(columnLabel));
+    }
+
+    @Override
+    public byte getByte(int columnIndex) {
+        return unchecked(resultSet, rs -> rs.getByte(columnIndex));
+    }
+
+    @Override
+    public byte[] getBytes(String columnLabel) {
+        return unchecked(resultSet, rs -> rs.getBytes(columnLabel));
+    }
+
+    @Override
+    public byte[] getBytes(int columnIndex) {
+        return unchecked(resultSet, rs -> rs.getBytes(columnIndex));
     }
 
     private interface InternalRowMapper<T> {
@@ -40,10 +80,7 @@ class RowImpl implements Row {
         try {
             return internalRowMapper.unchecked(rs);
         } catch (SQLException e) {
-            Unchecked.throwChecked(e);
-
-            //method will not reach below
-            return null;
+            return throwChecked(e);
         }
     }
 }

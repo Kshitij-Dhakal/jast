@@ -1,4 +1,4 @@
-package dhaka.example;
+package dhaka.example.person;
 
 import dhaka.jast.SqlRepo;
 
@@ -21,7 +21,7 @@ class PersonRepo extends SqlRepo {
                 .bind(4, person.getCreated())
                 .bind(5, person.getDeleted())
                 .executeUpdate()
-                .orElseThrow(failed(errMsg));
+                .catchAndRethrow(failed(errMsg));
         if (i == 1) {
             return findById(person.getId())
                     .orElseThrow();
@@ -35,14 +35,14 @@ class PersonRepo extends SqlRepo {
                 .bind(1, id)
                 .withConverter(new PersonRowMapper())
                 .findFirst()
-                .orElseThrow(failed("Failed to get person by id."));
+                .catchAndRethrow(failed("Failed to get person by id."));
     }
 
     List<Person> findAll() throws FailedException {
         return sql("SELECT * FROM person")
                 .withConverter(new PersonRowMapper())
                 .findAll()
-                .orElseThrow(failed("Failed to get person list."));
+                .catchAndRethrow(failed("Failed to get person list."));
     }
 
     private Function<Throwable, FailedException> failed(String errMsg) {

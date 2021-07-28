@@ -2,27 +2,29 @@ package dhaka.jast;
 
 import java.util.function.Function;
 
-//Result will only be used for holding value or throwable
-//Result holds either Optional or List, so it is decided to not add map, flatMap, or, orElse and any other methods
-// that are present in Optional and List.
-//Result more closely resembles CompletableFuture then Optional
-public interface Result<T> {
-    static <T> ResultImpl<T> of(T value) {
-        return new ResultImpl<>(value, null);
-    }
-
-    static <T> ResultImpl<T> error(Throwable throwable) {
-        return new ResultImpl<>(null, throwable);
-    }
-
-    //get value
-    //used for ignoring exceptions
+interface Result<T, U> {
+    /**
+     * get value
+     * used for ignoring exceptions
+     */
     T get();
 
-    T exceptionally(Function<Throwable, T> fn);
+    /**
+     * get value only if exception doesn't occur
+     * if exception occurs exception will be thrown
+     */
+    U rethrowError();
 
-    //throw exception
-    T orElseThrow();
+    /**
+     * get value even if exception occurred
+     * if exception occurs passed mapping function is used to get fallback value
+     */
+    U exceptionally(Function<Throwable, T> fn);
 
-    <E extends Exception> T orElseThrow(Function<Throwable, E> fn) throws E;
+
+    /**
+     * get value only if exception doesn't occur
+     * throws mapped exception instead
+     */
+    <E extends Throwable> U catchAndRethrow(Function<Throwable, E> fn) throws E;
 }
