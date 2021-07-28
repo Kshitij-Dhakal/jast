@@ -1,7 +1,7 @@
 package dhaka.jast;
 
 public interface Sql {
-    OptionalResult<Integer> executeUpdate();
+    UpdateResult<Integer> executeUpdate();
 
     Sql bind(int i, String value);
 

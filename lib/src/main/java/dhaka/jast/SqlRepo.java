@@ -17,12 +17,9 @@ public class SqlRepo {
         return new SqlImpl(sql, dataSource);
     }
 
-    public <T extends SqlRepo, U> U transaction(TransactionBlock<T, U> fn) {
-        try {
-            return fn.begin((T) this);
-        } catch (ClassCastException e) {
-            //TODO: handle class cast exception
-            throw new
+    public <U, E extends Throwable> U transactional(TransactionBlock<U, E> fn) {
+        try (var conn = dataSource.getConnection()) {
+            return fn.begin(new TransactionImpl(conn));
         } catch (Throwable throwable) {
             return throwChecked(throwable);
         }

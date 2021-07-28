@@ -23,7 +23,7 @@ class SqlImpl implements Sql {
     }
 
     @Override
-    public OptionalResult<Integer> executeUpdate() {
+    public UpdateResult<Integer> executeUpdate() {
         if (ThreadTransactionMap.containsTransactionInProgress()) {
             //don't close connection
             return getSqlResult(ThreadTransactionMap.get());
@@ -32,19 +32,19 @@ class SqlImpl implements Sql {
             try (var con = dataSource.getConnection()) {
                 return getSqlResult(con);
             } catch (SQLException exception) {
-                return OptionalResult.error(exception);
+                return UpdateResult.error(exception);
             }
         }
     }
 
-    private OptionalResult<Integer> getSqlResult(Connection con) {
+    private UpdateResult<Integer> getSqlResult(Connection con) {
         try (var pst = con.prepareStatement(sql)) {
             for (var pstConsumer : consumers) {
                 pstConsumer.accept(pst);
             }
-            return OptionalResult.of(pst.executeUpdate());
+            return UpdateResult.of(pst.executeUpdate());
         } catch (SQLException exception) {
-            return OptionalResult.error(exception);
+            return UpdateResult.error(exception);
         }
     }
 

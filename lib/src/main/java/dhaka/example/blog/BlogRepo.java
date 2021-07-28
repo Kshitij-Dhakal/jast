@@ -4,17 +4,52 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import dhaka.jast.Row;
 import dhaka.jast.SqlRepo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class BlogRepo extends SqlRepo {
+    private static final Logger log = LoggerFactory.getLogger(BlogRepo.class);
 
     public BlogRepo(DataSource dataSource) {
         super(dataSource);
+    }
+
+    boolean save(Blog blog) {
+        return sql("INSERT INTO blog(id, content, created, publisher) VALUES(?, ?, ?, ?")
+                .bind(1, blog.getId())
+                .bind(2, blog.getContent())
+                .bind(3, blog.getCreated())
+                .executeUpdate()
+                .rethrowError() == 1;
+    }
+
+    boolean delete(Blog blog) {
+        return sql("DELETE FROM blog WHERE id = ?")
+                .bind(1, blog.getId())
+                .executeUpdate()
+                .rethrowError() == 1;
+    }
+
+    Optional<Blog> findById(String id) {
+        return sql("SELECT b.id, b.content, b.created, p.id, p.name, c.id, c.content " +
+                "FROM blog b LEFT JOIN publisher p ON p.id=b.publisher LEFT JOIN comment c ON c.blog=b.id " +
+                "WHERE b.id = ?")
+                .bind(1, id)
+                .withConverter(this::toBlog)
+                .findAll()
+                .rethrowError().stream()
+                .collect(Collectors.groupingBy(Blog::getId, LinkedHashMap::new, Collectors.toList()))
+                //collect comments with common blog id
+                .values().stream().map(this::collectComments)
+                .collect(Collectors.toList())
+                .stream().findFirst();
     }
 
     PageResponse<Blog> findAll(PageRequest request) {
