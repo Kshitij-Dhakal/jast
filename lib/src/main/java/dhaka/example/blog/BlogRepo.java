@@ -4,8 +4,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import dhaka.jast.Row;
 import dhaka.jast.SqlRepo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.util.LinkedHashMap;
@@ -15,8 +13,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class BlogRepo extends SqlRepo {
-    private static final Logger log = LoggerFactory.getLogger(BlogRepo.class);
-
     public BlogRepo(DataSource dataSource) {
         super(dataSource);
     }

@@ -23,33 +23,53 @@ class RowImpl implements Row {
     }
 
     @Override
-    public Long getLong(String columnLabel) {
+    public long getLong(String columnLabel) {
         return unchecked(resultSet, rs -> rs.getLong(columnLabel));
     }
 
     @Override
-    public Long getLong(int columnIndex) {
+    public long getLong(int columnIndex) {
         return unchecked(resultSet, rs -> rs.getLong(columnIndex));
     }
 
     @Override
-    public Integer getInt(String columnLabel) {
+    public int getInt(String columnLabel) {
         return unchecked(resultSet, rs -> rs.getInt(columnLabel));
     }
 
     @Override
-    public Integer getInt(int columnIndex) {
+    public int getInt(int columnIndex) {
         return unchecked(resultSet, rs -> rs.getInt(columnIndex));
     }
 
     @Override
-    public Boolean getBoolean(String columnLabel) {
+    public boolean getBoolean(String columnLabel) {
         return unchecked(resultSet, rs -> rs.getBoolean(columnLabel));
     }
 
     @Override
-    public Boolean getBoolean(int columnIndex) {
+    public boolean getBoolean(int columnIndex) {
         return unchecked(resultSet, rs -> rs.getBoolean(columnIndex));
+    }
+
+    @Override
+    public byte getByte(String columnLabel) {
+        return unchecked(resultSet, rs -> rs.getByte(columnLabel));
+    }
+
+    @Override
+    public byte getByte(int columnIndex) {
+        return unchecked(resultSet, rs -> rs.getByte(columnIndex));
+    }
+
+    @Override
+    public byte[] getBytes(String columnLabel) {
+        return unchecked(resultSet, rs -> rs.getBytes(columnLabel));
+    }
+
+    @Override
+    public byte[] getBytes(int columnIndex) {
+        return unchecked(resultSet, rs -> rs.getBytes(columnIndex));
     }
 
     private interface InternalRowMapper<T> {
@@ -60,10 +80,7 @@ class RowImpl implements Row {
         try {
             return internalRowMapper.unchecked(rs);
         } catch (SQLException e) {
-            throwChecked(e);
-
-            //method will not reach below
-            return null;
+            return throwChecked(e);
         }
     }
 }

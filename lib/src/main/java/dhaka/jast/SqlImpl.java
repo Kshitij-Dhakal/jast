@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import static dhaka.jast.JastCommons.consume;
-import static dhaka.jast.JastCommons.throwChecked;
 
 class SqlImpl implements Sql {
     private final String sql;
@@ -24,9 +23,10 @@ class SqlImpl implements Sql {
 
     @Override
     public UpdateResult<Integer> executeUpdate() {
-        if (ThreadTransactionMap.containsTransactionInProgress()) {
+        if (ThreadConnectionMap.hasConnection()) {
+            //transactional update
             //don't close connection
-            return getSqlResult(ThreadTransactionMap.get());
+            return getSqlResult(ThreadConnectionMap.get());
         } else {
             //close connection
             try (var con = dataSource.getConnection()) {
@@ -54,57 +54,28 @@ class SqlImpl implements Sql {
     }
 
     @Override
-    public Sql bind(int i, Long value) {
+    public Sql bind(int i, long value) {
         return bind(consume(pst -> pst.setLong(i, value)));
     }
 
     @Override
-    public Sql bind(int i, Integer value) {
+    public Sql bind(int i, int value) {
         return bind(consume(pst -> pst.setInt(i, value)));
     }
 
     @Override
-    public Sql bind(int i, Boolean value) {
+    public Sql bind(int i, boolean value) {
         return bind(consume(pst -> pst.setBoolean(i, value)));
     }
 
     @Override
-    public void startTransaction() {
-        try {
-            //this connection is not closed by intention
-            //it is supposed to be shared by multiple method calls in same thread
-            //before finally committing or closing
-            var connection = dataSource.getConnection();
-            connection.setAutoCommit(false);
-            ThreadTransactionMap.put(connection);
-        } catch (SQLException throwable) {
-            //noinspection ResultOfMethodCallIgnored
-            throwChecked(throwable);
-        }
+    public Sql bind(int i, byte value) {
+        return bind(consume(pst -> pst.setByte(i, value)));
     }
 
     @Override
-    public void commit() {
-        try (var connection = ThreadTransactionMap.get()) {
-            if (connection != null) {
-                connection.commit();
-            }
-        } catch (SQLException throwable) {
-            //noinspection ResultOfMethodCallIgnored
-            throwChecked(throwable);
-        }
-    }
-
-    @Override
-    public void rollback() {
-        try (var connection = ThreadTransactionMap.get()) {
-            if (connection != null) {
-                connection.rollback();
-            }
-        } catch (SQLException throwable) {
-            //noinspection ResultOfMethodCallIgnored
-            throwChecked(throwable);
-        }
+    public Sql bind(int i, byte[] value) {
+        return bind(consume(pst -> pst.setBytes(i, value)));
     }
 
     @Override

@@ -6,17 +6,17 @@ import java.sql.Connection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 
-class ThreadTransactionMap {
+class ThreadConnectionMap {
     private static ConcurrentMap<Long, Connection> instance;
 
-    private ThreadTransactionMap() {
+    private ThreadConnectionMap() {
         //no instance
     }
 
     private static Map<Long, Connection> getMap() {
         var result = instance;
         if (result == null) { // First check (no locking)
-            synchronized (ThreadTransactionMap.class) {
+            synchronized (ThreadConnectionMap.class) {
                 result = instance;
                 if (result == null) { // Second check (with locking)
                     instance = result = Maps.newConcurrentMap();
@@ -41,7 +41,13 @@ class ThreadTransactionMap {
         map.put(id, connection);
     }
 
-    public static boolean containsTransactionInProgress() {
+    public static void remove() {
+        var map = getMap();
+        var id = Thread.currentThread().getId();
+        map.remove(id);
+    }
+
+    public static boolean hasConnection() {
         return getMap().containsKey(Thread.currentThread().getId());
     }
 }

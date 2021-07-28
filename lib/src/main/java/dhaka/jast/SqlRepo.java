@@ -18,10 +18,15 @@ public class SqlRepo {
     }
 
     public <U, E extends Throwable> U transactional(TransactionBlock<U, E> fn) {
+        Objects.requireNonNull(fn);
         try (var conn = dataSource.getConnection()) {
+            conn.setAutoCommit(false);
+            ThreadConnectionMap.put(conn);
             return fn.begin(new TransactionImpl(conn));
         } catch (Throwable throwable) {
             return throwChecked(throwable);
+        } finally {
+            ThreadConnectionMap.remove();
         }
     }
 }
