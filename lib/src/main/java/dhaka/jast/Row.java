@@ -5,15 +5,23 @@ public interface Row {
 
     String getString(int columnIndex);
 
-    Long getLong(String columnLabel);
+    long getLong(String columnLabel);
 
-    Long getLong(int columnIndex);
+    long getLong(int columnIndex);
 
-    Integer getInt(String columnLabel);
+    int getInt(String columnLabel);
 
-    Integer getInt(int columnIndex);
+    int getInt(int columnIndex);
 
-    Boolean getBoolean(String columnLabel);
+    boolean getBoolean(String columnLabel);
 
-    Boolean getBoolean(int columnIndex);
+    boolean getBoolean(int columnIndex);
+
+    byte getByte(String columnLabel);
+
+    byte getByte(int columnIndex);
+
+    byte[] getBytes(String columnLabel);
+
+    byte[] getBytes(int columnIndex);
 }

@@ -2,13 +2,14 @@ package dhaka.jast;
 
 import java.util.function.Consumer;
 
-class Unchecked {
-    private Unchecked() {
+class JastCommons {
+    private JastCommons() {
         //no instance
     }
 
-    public static void throwChecked(Throwable throwable) {
+    public static <T> T throwChecked(Throwable throwable) {
         org.jooq.lambda.Unchecked.throwChecked(throwable);
+        return null;
     }
 
     public static <T, E extends Throwable> Consumer<T> consume(CheckedConsumer<T, E> consumer) {

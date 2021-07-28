@@ -1,21 +1,19 @@
 package dhaka.jast;
 
 public interface Sql {
-    OptionalResult<Integer> executeUpdate();
+    UpdateResult<Integer> executeUpdate();
 
     Sql bind(int i, String value);
 
-    Sql bind(int i, Long value);
+    Sql bind(int i, long value);
 
-    Sql bind(int i, Integer value);
+    Sql bind(int i, int value);
 
-    Sql bind(int i, Boolean value);
+    Sql bind(int i, boolean value);
 
-    void startTransaction();
+    Sql bind(int i, byte value);
 
-    void commit();
-
-    void rollback();
+    Sql bind(int i, byte[] value);
 
     <T> MappedRow<T> withConverter(RowMapper<T> rowMapper);
 }

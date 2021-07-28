@@ -3,13 +3,13 @@ package dhaka.example.blog;
 import java.util.Collections;
 import java.util.List;
 
-public class PageResponse<T> {
-    private List<T> tList;
-    private Long offset;
-    private Long limit;
-    private Sort sort;
+class PageResponse<T> {
+    private final List<T> tList;
+    private final Long offset;
+    private final Long limit;
+    private final Sort sort;
 
-    public PageResponse(List<T> tList, Long offset, Long limit, Sort sort) {
+    PageResponse(List<T> tList, Long offset, Long limit, Sort sort) {
         this.tList = tList;
         this.offset = offset;
         this.limit = limit;

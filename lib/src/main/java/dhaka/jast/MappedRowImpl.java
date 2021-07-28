@@ -21,8 +21,8 @@ class MappedRowImpl<T> implements MappedRow<T> {
     private final DataSource dataSource;
     private final List<Consumer<PreparedStatement>> consumers;
 
-    public MappedRowImpl(String sql, RowMapper<T> rowMapper, DataSource dataSource,
-                         @Nonnull List<Consumer<PreparedStatement>> consumers) {
+    MappedRowImpl(String sql, RowMapper<T> rowMapper, DataSource dataSource,
+                  @Nonnull List<Consumer<PreparedStatement>> consumers) {
         this.sql = sql;
         this.rowMapper = rowMapper;
         this.dataSource = dataSource;
@@ -70,8 +70,8 @@ class MappedRowImpl<T> implements MappedRow<T> {
              var pst = con.prepareStatement(sql);
              var rs = getResultSet(pst)) {
             return function.apply(rs);
-        } catch (SQLException exception) {
-            return errorFunction.apply(exception);
+        } catch (SQLException throwable) {
+            return errorFunction.apply(throwable);
         }
     }
 }
