@@ -1,4 +1,4 @@
-package dhaka.example;
+package dhaka.example.person;
 
 class Person {
     private String id;
