@@ -1,6 +1,6 @@
 # [Just Another SQL Template (JAST)](https://kshitij-dhakal.github.io/jast/)
 
-JAST is a lightweight sql template library for java that is inspired
+JAST is a lightweight sql template library for java inspired
 by [Spring Data R2DBC](https://spring.io/projects/spring-data-r2dbc).
 
 ## Getting Started
@@ -84,7 +84,7 @@ Full code can be found inside `dhaka.example` package.
 
 ## Transaction <sup>BETA</sup>
 
-Executing transactions right from service layer. Jast will make all the update code inside the transaction block atomic
+Execute transactions right from service layer. Jast will make all the update code inside the transaction block atomic
 automatically.
 
 ```java
