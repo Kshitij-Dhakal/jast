@@ -1,6 +1,7 @@
 package dhaka.jast;
 
 public interface Transaction {
-    void commit();
-    void rollback();
+    TransactionalSql sql(String sql);
+
+    boolean elseCommit();
 }

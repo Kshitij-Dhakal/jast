@@ -1,38 +1,13 @@
 package dhaka.jast;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-
-import static dhaka.jast.JastCommons.throwChecked;
-
-class TransactionImpl implements Transaction {
-    private final Connection connection;
-
-    TransactionImpl(Connection connection) {
-        this.connection = connection;
+public class TransactionImpl implements Transaction {
+    @Override
+    public TransactionalSql sql(String sql) {
+        return null;
     }
 
     @Override
-    public void commit() {
-        try {
-            if (connection != null) {
-                connection.commit();
-            }
-        } catch (SQLException throwable) {
-            //noinspection ResultOfMethodCallIgnored
-            throwChecked(throwable);
-        }
-    }
-
-    @Override
-    public void rollback() {
-        try {
-            if (connection != null) {
-                connection.rollback();
-            }
-        } catch (SQLException throwable) {
-            //noinspection ResultOfMethodCallIgnored
-            throwChecked(throwable);
-        }
+    public boolean elseCommit() {
+        return false;
     }
 }
