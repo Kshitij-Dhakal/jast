@@ -4,7 +4,7 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static dhaka.jast.JastCommons.throwChecked;
+import static dhaka.jast.Unchecked.throwChecked;
 
 final class ResultHelper {
     private ResultHelper() {

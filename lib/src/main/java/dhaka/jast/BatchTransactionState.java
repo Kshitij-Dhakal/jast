@@ -22,4 +22,6 @@ public interface BatchTransactionState extends Sql {
     BatchTransactionState bind(int i, byte[] value);
 
     Transaction rollbackIf(Predicate<Integer[]> i);
+
+    BatchTransactionState addBatch();
 }

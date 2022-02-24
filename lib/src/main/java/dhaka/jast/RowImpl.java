@@ -3,7 +3,7 @@ package dhaka.jast;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static dhaka.jast.JastCommons.throwChecked;
+import static dhaka.jast.Unchecked.throwChecked;
 
 class RowImpl implements Row {
     private final ResultSet resultSet;

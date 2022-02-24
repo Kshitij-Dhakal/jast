@@ -2,8 +2,8 @@ package dhaka.jast;
 
 import java.util.function.Consumer;
 
-class JastCommons {
-    private JastCommons() {
+class Unchecked {
+    private Unchecked() {
         //no instance
     }
 

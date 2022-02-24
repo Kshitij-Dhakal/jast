@@ -1,7 +1,11 @@
 package dhaka.jast;
 
-public interface Transaction {
-    TransactionalSql sql(String sql);
+import java.util.function.IntPredicate;
 
-    boolean elseCommit();
+public abstract class Transaction {
+    public abstract TransactionalSql sql(String sql);
+
+    public abstract UpdateResult<Boolean> elseCommit();
+
+    abstract Transaction put(TransactionalSql sql, IntPredicate i);
 }

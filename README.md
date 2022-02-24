@@ -88,52 +88,34 @@ Execute transactions right from service layer. Jast will make all the update cod
 automatically.
 
 ```java
-class BlogRepo extends SqlRepo {
+class TransactionExampleRepo extends SqlRepo {
+   TransactionExampleRepo(DataSource dataSource) {
+      super(dataSource);
+   }
 
-    BlogRepo(DataSource dataSource) {
-        super(dataSource);
-    }
+   boolean transactionTest() {
+      return begin().sql("sql1")
+              .bind(1, "Some value")
+              .rollbackIf(i -> i == 1)
+              .sql("sql2")
+              .bind(1, "Another Value")
+              .rollbackIf(i -> i == 1)
+              .elseCommit()
+              .exceptionally(throwable -> false);
+   }
 
-    boolean save(Blog blog) { /**/ }
-
-    boolean delete(Blog blog) { /**/ }
-
-    Optional<Blog> findById(String id) { /**/ }
-}
-
-class BlogService {
-    private final BlogRepo blogRepo;
-
-    public BlogService(BlogRepo blogRepo) {
-        this.blogRepo = blogRepo;
-    }
-
-    Blog updateBlog(Blog blog) throws FailedException {
-        return blogRepo
-                .transactional(txn -> {
-                    try {
-                        if (blogRepo.delete(blog) &&
-                                blogRepo.save(blog)) {
-                            return commit(blog, txn);
-                        } else {
-                            return rollback(txn);
-                        }
-                    } catch (Throwable throwable) {
-                        return rollback(txn);
-                    }
-                })
-                .orElseThrow(() -> new FailedException("Failed to update blog."));
-    }
-
-    private Optional<Blog> commit(Blog blog, Transaction txn) {
-        txn.commit();
-        return blogRepo.findById(blog.getId());
-    }
-
-    private Optional<Blog> rollback(Transaction txn) {
-        txn.rollback();
-        return Optional.empty();
-    }
+   boolean batchTransactionTest() {
+      return begin().sql("batch sql")
+              .bind(1, "V1")
+              .addBatch()
+              .bind(2, "V2")
+              .addBatch()
+              .bind(3, "V3")
+              .addBatch()
+              .rollbackIf(arr -> Arrays.stream(arr).anyMatch(i -> i != 1))
+              .elseCommit()
+              .exceptionally(throwable -> false);
+   }
 }
 ```
 

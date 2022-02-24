@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.function.Consumer;
 
-import static dhaka.jast.JastCommons.consume;
+import static dhaka.jast.Unchecked.consume;
 
 class SqlImpl implements SimpleSql {
     private final String sql;

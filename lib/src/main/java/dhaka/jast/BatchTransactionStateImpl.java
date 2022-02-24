@@ -37,4 +37,9 @@ public class BatchTransactionStateImpl implements BatchTransactionState {
     public Transaction rollbackIf(Predicate<Integer[]> i) {
         return null;
     }
+
+    @Override
+    public BatchTransactionState addBatch() {
+        return null;
+    }
 }

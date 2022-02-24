@@ -1,27 +1,34 @@
 package dhaka.jast;
 
+import java.sql.PreparedStatement;
+import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.IntPredicate;
 
-public interface TransactionalSql extends Sql {
+public abstract class TransactionalSql implements Sql {
     @Override
-    TransactionalSql bind(int i, String value);
-
-    @Override
-    TransactionalSql bind(int i, long value);
+    public abstract TransactionalSql bind(int i, String value);
 
     @Override
-    TransactionalSql bind(int i, int value);
+    public abstract TransactionalSql bind(int i, long value);
 
     @Override
-    TransactionalSql bind(int i, boolean value);
+    public abstract TransactionalSql bind(int i, int value);
 
     @Override
-    TransactionalSql bind(int i, byte value);
+    public abstract TransactionalSql bind(int i, boolean value);
 
     @Override
-    TransactionalSql bind(int i, byte[] value);
+    public abstract TransactionalSql bind(int i, byte value);
 
-    Transaction rollbackIf(IntPredicate i);
+    @Override
+    public abstract TransactionalSql bind(int i, byte[] value);
 
-    BatchTransactionState addBatch();
+    public abstract BatchTransactionState addBatch();
+
+    public abstract Transaction rollbackIf(IntPredicate i);
+
+    abstract List<Consumer<PreparedStatement>> getBinders();
+
+    abstract String getQuery();
 }
