@@ -9,6 +9,7 @@
 plugins {
     // Apply the java-library plugin for API and implementation separation.
     id 'java-library'
+    id 'maven-publish'
 }
 
 repositories {
@@ -25,15 +26,31 @@ dependencies {
 
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
     implementation 'com.google.guava:guava:30.1-jre'
-
-    // https://mvnrepository.com/artifact/org.jooq/jool
     implementation group: 'org.jooq', name: 'jool', version: '0.9.14'
-
-    // https://mvnrepository.com/artifact/org.slf4j/slf4j-api
     implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.32'
 }
 
 tasks.named('test') {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
+}
+
+publishing {
+    publications {
+        library(MavenPublication) {
+            from components.java
+            groupId 'com.dhaka.jast'
+            artifactId 'jast'
+        }
+    }
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = "https://maven.pkg.github.com/Kshitij-Dhakal/jast"
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("GH_USER_NAME")
+                password = project.findProperty("gpr.key") ?: System.getenv("GH_PACKAGES_UPLOAD_TOKEN")
+            }
+        }
+    }
 }

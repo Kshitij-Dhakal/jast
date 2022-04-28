@@ -3,6 +3,8 @@
 JAST is a lightweight sql template library for java inspired
 by [Spring Data R2DBC](https://spring.io/projects/spring-data-r2dbc).
 
+Javadoc link [here](https://kshitij-dhakal.github.io/jast/).
+
 ## Getting Started
 
 Full code can be found inside `dhaka.example` package.
